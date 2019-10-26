@@ -1,73 +1,5 @@
 """
-Development Log:
-
 STS Rating
-
-Tested on Python 2.7.6, 2.7.11
-
-v13.1
-1. Remove dependency of cpu_info, cpu brand is no longer displayed.
-
-v13
-1. Also display app version in summary file
-2. Modify reporting of number of cores, now no more physical
-and no more logical cores, just number of cores
-3. Added contempt for uci engines that supports such option
-
-v12
-1. Modify epd reader now will read sts version 3.epd
-2. Refactor winboard code, increase wait time for done=1
-3. Updated STS 12, now using epd's with more alternatives on pos
-1 to 23. There are 2 such files in official website, the other one
-has less alternative moves.
-4. Modify test set epd formats, opcodes are now in order, c0, c7, c8 and c9.
-Test set is now at version 3
-5. Display top 5 strong and weak test set results
-6. Show test set title, in summary
-7. Use latest version of psutil, the module that detects number
-of logical and physical cores
-
-v11
-1. Refactor winboard code
-2. Delete existing logfn and lognotsolved
-
-v10.0
-1. Verify engine and test set files are existing
-2. Now using psutil 3.2.1
-3. Refactor output, added name of epd and counts and max points
-4. Added STS title in summary
-
-v9.0
-1. Use psutil and cpuinfo instead of wmi
-
-v1.0
-1. Able to display breakdown in vertical
-
-v2.0
-1. Display categories in horizontal
-
-v3.0
-1. Support winboard engines that have setboard and level commands
-and will output move e2e4
-
-v4
-1. Use level command instead of st
-
-v5
-1. add option --mps and --tc for winboard engines
-2. Update usage()
-
-released as v3
-
-v6
-1. Support for st command for winboard engines
-2. Refactor logging and reslts output File Object
-
-v7
-1. Will read SAN move from wb engines
-
-v8
-1. Will read the st command in float sec
 
 """
 
@@ -76,7 +8,6 @@ import getopt
 import os
 import subprocess
 import time, datetime
-import platform
 import timeit
 import multiprocessing
 
@@ -85,7 +16,7 @@ UCI = 0
 WB = 1
 MS_TIME_BUFFER = 20
 APP_NAME = 'STS Rating'
-VERSION = "13.1"
+VERSION = "14.0"
 APP_NAME_VERSION = APP_NAME + " v" + VERSION
 STS_ID = ['STS(v1.0)', 'STS(v2.2)', 'STS(v3.0)', 'STS(v4.0)', 'STS(v5.0)',\
           'STS(v6.0)', 'STS(v7.0)', 'STS(v8.0)', 'STS(v9.0)', 'STS(v10.0)',\
@@ -212,15 +143,12 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
     if debug:
         delete_file(logfn)
         delete_file(logNotSolved)
-        logfnFO = open(logfn, 'w')    
-    
-    time_start = time.clock()
+        logfnFO = open(logfn, 'w')
     
     # Run engine
-    p = subprocess.Popen(engineName,\
-                         stdin=subprocess.PIPE,\
-                         stdout=subprocess.PIPE,\
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(engineName, stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                             universal_newlines=True, bufsize=1)
     print("Starting engine " + engineName + " ...")
 
     if debug:
@@ -229,7 +157,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
     waitTime = 30
     if proto == WB:
         if debug:
-            print 'Set wait time to %ds' % waitTime
+            print('Set wait time to %ds' % waitTime)
             logfnFO.write('Set wait time to %ds\n' % waitTime)
         p.stdin.write("xboard\n")
     else:
@@ -237,7 +165,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
         
     if debug:
         if proto == WB:
-            print '>> xboard'
+            print('>> xboard')
             logfnFO.write(">> xboard\n")
         else:
             # print '>> uci'
@@ -248,13 +176,13 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
     # Parse winboard engine output
     if proto == WB:
         bSupportSetboard = False
-        wbt1 = time.clock()
+        wbt1 = time.perf_counter()
         ENG_ID_NAME = engineName[:-4]
         ENG_ID_NAME = ENG_ID_NAME.strip()
         
         p.stdin.write("protover 2\n")
         if debug:
-            print '>> protover 2'
+            print('>> protover 2')
             logfnFO.write(">> protover 2\n")
 
         # Parse engine output        
@@ -263,36 +191,36 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
             
             # Print in console
             if debug:
-                print '<< %s' % eline                
+                print('<< %s' % eline)
             
             if debug:
                 logfnFO.write("<< " + eline + "\n")
             if "done=0" in eline:
-                print 'Receive done=0'
+                print('Receive done=0')
                 waitTime = waitTime*3
-                print 'Increase wait time to %ds' % waitTime                
+                print('Increase wait time to %ds' % waitTime)             
                 if debug:
                     logfnFO.write("Received done=0\n")
                     logfnFO.write('Increase wait time to %ds\n' % waitTime)
             if "setboard=1" in eline:
                 bSupportSetboard = True
                 if debug:
-                    print 'Received setboard=1'
+                    print('Received setboard=1')
                     logfnFO.write("Received setboard=1\n")
             if "done=1" in eline:
                 if debug:
-                    print 'Received done=1'
-                    print 'Stop parsing engine init output'
+                    print('Received done=1')
+                    print('Stop parsing engine init output')
                     logfnFO.write('Received done=1\n')
                     logfnFO.write('Stop parsing engine init output\n')
                 break             
             # Check if we exceed wait time
-            wbt2 = time.clock()
+            wbt2 = time.perf_counter()
             tdiff = (wbt2 - wbt1)
             if tdiff > waitTime:             
                 if debug:
-                    print 'Did not received done=1 after %ds' % waitTime
-                    print 'Stop parsing engine init output'
+                    print('Did not received done=1 after %ds' % waitTime)
+                    print('Stop parsing engine init output')
                     with open(logfn, 'a') as f:
                         f.write('Did not received done=1 after %ds\n' % waitTime)
                         f.write('Stop parsing engine init output\n')
@@ -373,11 +301,9 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
             logfnFO.write(">> setoption name Max CPUs value " + str(threadsv) + "\n")
             logfnFO.write("\n")
 
-    cm = 0
-    wrong = 0
     ResultData = []
 
-    timeStart = time.clock()
+    timeStart = time.perf_counter()
 
     for idItem in STS_ID:
         pos_num = 0
@@ -432,7 +358,6 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                 if "c8" in pos:
                     a = pos.split(' ')
                     i = a.index("c8")
-                    le = len(a)
                     c8Val = ""
                     c8Val = ' '.join(a[i+1:])                    
                     c8Val = c8Val.split(';')
@@ -543,7 +468,6 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
 
                     p.stdin.write("position fen " + fen + "\n")                    
                     p.stdin.write("go movetime " + str(stime) + "\n")
-                    t1 = time.clock()  # Start time for sending stop if engine is not working
                     
                     if debug:
                         logfnFO.write("%s >> go movetime %s\n" %(datetime.datetime.now().isoformat(), str(stime)))
@@ -686,10 +610,9 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
 
     # Quit the engine
     p.stdin.write("quit\n")
-    p.stdin.close()
     p.communicate()
 
-    timeEnd = time.clock()
+    timeEnd = time.perf_counter()
         
     try:
         num_cores = multiprocessing.cpu_count()
@@ -872,7 +795,7 @@ def main(argv):
                                                       "movetime=", "log", 'getrating', 'proto=',\
                                                       'tc=', 'mps=', 'st=', 'san', 'contempt='])
     except getopt.GetoptError as err:
-        print str(err) # will print something like "option -a not recognized"
+        print(str(err))
         usage()
         sys.exit(2)
     for opt, arg in opts:
@@ -909,21 +832,21 @@ def main(argv):
     if sEngine == None:
         print("Engine was not defined??\n")
         usage()
-        raw_input("\nPress enter key to exit")
+        input("\nPress enter key to exit")
     elif sFile == None:
         print("EPD file was not defined??\n")
         usage()
-        raw_input("\nPress enter key to exit")
+        input("\nPress enter key to exit")
     else:
         # Verify engine exists
         if sProto == 'uci' and not os.path.isfile(sEngine):
-            print 'engine %s is missing' % sEngine
-            raw_input("Press enter key to exit")
+            print('engine %s is missing' % sEngine)
+            input("Press enter key to exit")
             sys.exit(1)
         # Verify if file exists
         if not os.path.isfile(sFile):
-            print 'test file %s is missing' % sFile
-            raw_input("Press enter key to exit")
+            print('test file %s is missing' % sFile)
+            input("Press enter key to exit")
             sys.exit(1) 
         print("\nEngine: %s" %(sEngine))
         if protocol == 0:
@@ -958,8 +881,8 @@ def main(argv):
                     numberOfPositions, bRate, analysisTime, protocol,\
                     stc, nmps, nSt, bSan, contempt)
 
-        print '\nDone!!'
-        raw_input("Press enter key to exit")   
+        print('\nDone!!')
+        input("Press enter key to exit")   
 
 if __name__ == "__main__":
    main(sys.argv[1:])
