@@ -1300,7 +1300,7 @@ r4rk1/pbp5/1p1p1n1p/5Bp1/P1PP4/4q3/1P1N2PP/2RQ1R1K w - - bm d5; id "STS(v13.0) P
 rq3k2/1p3bp1/2p1pp1p/2P5/1P2PPP1/4Q2P/6BK/3R4 b - - bm e5; id "STS(v13.0) Pawn Play in the Center.100"; c0 "e5=10, Kg8=8, Qa7=8, Qc7=8"; c7 "e5 Kg8 Qa7 Qc7"; c8 "10 8 8 8"; c9 "e6e5 f8g8 b8a7 b8c7";
 1k5r/1p1b4/4pp1r/3p4/q4PQ1/3B1R1P/2P1R1PK/8 w - - bm Qg7; id "STS(v14.0) 7th Rank.001"; c0 "Qg7=10, Qg3=3, Re1=3, Ree3=2, Ref2=2"; c7 "Qg7 Qg3 Re1 Ree3 Ref2"; c8 "10 3 3 2 2"; c9 "g4g7 g4g3 e2e1 e2e3 e2f2";
 1n1r1rk1/4bpp1/p2p3p/1q1Qp3/1P2P3/P3BN1P/5PP1/2R1R1K1 w - - bm Rc7; id "STS(v14.0) 7th Rank.002"; c0 "Rc7=10, Nd2=6, Qxb5=8, Red1=6"; c7 "Rc7 Nd2 Qxb5 Red1"; c8 "10 6 8 6"; c9 "c1c7 f3d2 d5b5 e1d1";
-1n2r3/ppb2kp1/5p1p/2p2N1P/6P1/2B5/PPP2P2/2KR4 b - g3 bm Re2; id "STS(v14.0) 7th Rank.003"; c0 "Re2=10, Bb6=7, Bf4+=7, Re4=7"; c7 "Re2 Bb6 Bf4+ Re4"; c8 "10 7 7 7"; c9 "e8e2 c7b6 c7f4 e8e4";
+1n2r3/ppb2kp1/5p1p/2p2N1P/6P1/2B5/PPP2P2/2KR4 b - - bm Re2; id "STS(v14.0) 7th Rank.003"; c0 "Re2=10, Bb6=7, Bf4+=7, Re4=7"; c7 "Re2 Bb6 Bf4+ Re4"; c8 "10 7 7 7"; c9 "e8e2 c7b6 c7f4 e8e4";
 1r1n4/5pk1/Qp1r1qp1/3B3p/1R2P2P/6P1/5P2/1R4K1 w - - bm Qa7; id "STS(v14.0) 7th Rank.004"; c0 "Qa7=10"; c7 "Qa7"; c8 "10"; c9 "a6a7";
 1r1q2k1/3b1pb1/p2p2p1/3Np3/4P1P1/1P1Q1P2/KP1B4/2R5 w - - bm Rc7; id "STS(v14.0) 7th Rank.005"; c0 "Rc7=10, g5=5, Rc2=7, Rc3=5"; c7 "Rc7 g5 Rc2 Rc3"; c8 "10 5 7 5"; c9 "c1c7 g4g5 c1c2 c1c3";
 1r1r2k1/4pp2/1PR3p1/p2P1n1p/1p1q1Q2/5P1P/2B1RPPK/8 w - - bm Qc7; id "STS(v14.0) 7th Rank.006"; c0 "Qc7=10, Qc1=1, Re4=1"; c7 "Qc7 Qc1 Re4"; c8 "10 1 1"; c9 "f4c7 f4c1 e2e4";
@@ -1344,7 +1344,7 @@ rq3k2/1p3bp1/2p1pp1p/2P5/1P2PPP1/4Q2P/6BK/3R4 b - - bm e5; id "STS(v13.0) Pawn P
 3r2k1/pp3bbp/3q1p2/2p5/5pQ1/1P3N2/P3R1PP/4R2K w - - bm Re7; id "STS(v14.0) 7th Rank.044"; c0 "Re7=10"; c7 "Re7"; c8 "10"; c9 "e2e7";
 3r2r1/3kp1P1/2p5/1q1pP3/1p6/1Pb2Q2/PN4R1/1K1R4 w - - bm Qf7; id "STS(v14.0) 7th Rank.045"; c0 "Qf7=10, Nd3=8, Qe3=4, Rc1=5"; c7 "Qf7 Nd3 Qe3 Rc1"; c8 "10 8 4 5"; c9 "f3f7 b2d3 f3e3 d1c1";
 3r3k/p4p1p/b4Prp/1p2R3/1P1p4/6PP/P4PB1/3R2K1 w - - bm Re7; id "STS(v14.0) 7th Rank.046"; c0 "Re7=10, Rd2=4, Re4=6, Rf5=7"; c7 "Re7 Rd2 Re4 Rf5"; c8 "10 4 6 7"; c9 "e5e7 d1d2 e5e4 e5f5";
-3r4/3r2bk/1p4pp/pN2n3/P6P/4Q1P1/1P2B1K1/8 b - h3 bm Rd2; id "STS(v14.0) 7th Rank.047"; c0 "Rd2=10, h5=7"; c7 "Rd2 h5"; c8 "10 7"; c9 "d7d2 h6h5";
+3r4/3r2bk/1p4pp/pN2n3/P6P/4Q1P1/1P2B1K1/8 b - - bm Rd2; id "STS(v14.0) 7th Rank.047"; c0 "Rd2=10, h5=7"; c7 "Rd2 h5"; c8 "10 7"; c9 "d7d2 h6h5";
 3r4/3rq1k1/1R1p2pp/1Rp1p3/P3N3/2P1nP2/1Q4PP/6K1 w - - bm Rb7; id "STS(v14.0) 7th Rank.048"; c0 "Rb7=10, Qa2=4, Qe2=5, Rc6=4"; c7 "Rb7 Qa2 Qe2 Rc6"; c8 "10 4 5 4"; c9 "b6b7 b2a2 b2e2 b6c6";
 3rk3/1p3pQp/p4R2/3p4/2P5/1P2q1P1/P1K4P/8 b - - bm Qe2+; id "STS(v14.0) 7th Rank.049"; c0 "Qe2+=10, Kd7=7, Qe4+=7, Qe7=7"; c7 "Qe2+ Kd7 Qe4+ Qe7"; c8 "10 7 7 7"; c9 "e3e2 e8d7 e3e4 e3e7";
 3rkb1r/pp2pppp/1n2q3/8/7Q/2P5/PP3PPP/RNB2RK1 b k - bm Qe2; id "STS(v14.0) 7th Rank.050"; c0 "Qe2=10, Qc6=1, Qd5=1, Qf5=1"; c7 "Qe2 Qc6 Qd5 Qf5"; c8 "10 1 1 1"; c9 "e6e2 e6c6 e6d5 e6f5";
