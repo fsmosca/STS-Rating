@@ -35,7 +35,7 @@ sts 1 to 15 positions with new points based from stockfish 15 analysis. This fil
 This is similar to `STS1-STS15_LAN_v4.epd` except the max point in each position is 100.
 
 * STS1-STS15_LAN_v6.epd  
-Similar to `STS1-STS15_LAN_v5.epd,` except only those positions are saved when `top1_score` less `top2_score` >= `10 cp`. This would at least assure us that there is only 1 best move in the position. There are now only 1188 positions in the test suite. This was 1500.
+Similar to `STS1-STS15_LAN_v5.epd,` except only those positions are saved if `top1_score` less `top2_score` is greater than or equal to `10 cp`. This would at least assure us there is only 1 best move in the position. There are now only 1188 positions in the test suite. This was 1500.
 
 ## Evaluation/Point mapping
 
