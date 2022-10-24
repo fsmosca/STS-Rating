@@ -1,6 +1,8 @@
 # STS-Rating
 A method to rate chess engines using STS test suite.
 
+Sample [test results](https://github.com/fsmosca/STS-Rating/wiki) are in the wiki.
+
 ## Setup
 
 * Install Python version >= 3.7
