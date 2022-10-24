@@ -8,8 +8,19 @@ Sample [test results](https://github.com/fsmosca/STS-Rating/wiki) are in the wik
 * Install Python version >= 3.7
 
 ## Command line
+
+#### If the test suite has a max point of 10.
+
 ```
 python sts_rating.py -f "STS1-STS15_LAN_v3.epd" -e Stockfish.exe -t 1 -h 128
+
+python sts_rating.py -f "./epd/STS1-STS15_LAN_v4.epd" -e Stockfish.exe -t 1 -h 128
+```
+
+#### If the test suite has a max point of 100.
+
+```
+python sts_rating.py -f "./epd/STS1-STS15_LAN_v5.epd" -e Stockfish.exe -t 1 -h 128 --maxpoint 100
 ```
 
 ## Files
@@ -21,6 +32,65 @@ sts 1 to 15 positions with new points based from stockfish 15 analysis. This fil
 
 * STS1-STS15_LAN_v5.epd  
 This is similar to `STS1-STS15_LAN_v4.epd` except the max point in each position is 100.
+
+## Evaluation/Point mapping
+
+The multipv scores obtained from the position analysis are mapped to [1, 10] points for 'STS1-STS15_LAN_v4.epd', and [1, 100] for 'STS1-STS15_LAN_v5.epd'.
+
+Example:  
+
+The top 10 evaluations in centipawn from the given position:  
+
+```
+eval = [300, 150, 80, 50, 10, -10, -50, -150, -250, -251]
+```
+
+In the [1, 100] mapping, the point will be:  
+
+```
+eval: 300, point: 100
+eval: 150, point: 73
+eval: 80, point: 60
+eval: 50, point: 55
+eval: 10, point: 48
+eval: -10, point: 44
+eval: -50, point: 37
+eval: -150, point: 19
+eval: -250, point: 1
+eval: -251, point: 1
+```
+
+Interpolation code.
+
+```python
+def interpol(e: int, emin: int, emax: int, pmin: int, pmax: int) -> int:
+    """Gets the point from a given evaluation.
+
+    Args:
+      e: The eval that we want to convert to a point in the range of say [1, 100]
+      emin: The minimum eval, e.g -200 cp
+      emax: The maximum eval, e.g. 1000 cp
+      pmin: The minimum point, e.g. 1
+      pmax: The maximum point, e.g. 100
+
+    Returns:
+      The point equivalent of e.
+    """
+    return ((e - emin) * (pmax - pmin)) / max(emax - emin, 0.001) + pmin
+```
+
+Sample conversion:  
+
+```python
+# The top 10 scores from engine analysis.
+eval = [300, 150, 80, 50, 10, -10, -50, -150, -250, -251]
+minpt, maxpt = 1, 100
+
+for e in eval:
+    pt = interpol(e, min(eval), max(eval), minpt, maxpt)
+    pt_int = int(round(pt, 0))
+    print(f'eval: {e}, point: {pt_int}')
+```
 
 ## Notes
 * The program `--getrating` flag is only applicable for the `STS1-STS15_LAN_v3.epd` test.
