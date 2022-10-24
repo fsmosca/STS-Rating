@@ -2,7 +2,7 @@
 STS Rating
 """
 
-__version__ = '14.1'
+__version__ = '14.2'
 
 
 import sys
@@ -86,6 +86,7 @@ def usage():
    print("--proto <string, uci or wb>, protocol the engine supports")
    print("--san, will read engine move in SAN format, only for WB engines")
    print("--contempt, for uci engines that supports such option")
+   print("--maxpoint, the max point in the position, default is 10")
    
    print("\nExample:")
    print('Ex1. Analyze test.epd with 2 threads and 128 MB hash, at 3s/pos using sf 6.exe')
@@ -95,9 +96,9 @@ def usage():
    print('STS_Rating -f "all sts.epd" -e sf6.exe -h 128 --getrating\n')
 
 
-def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPositions,\
-                bCalculateRating, nRatingAnaTime, proto, sWBtc, nWBmps, nSt, optionSan,\
-                contemptOption):
+def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPositions,
+                bCalculateRating, nRatingAnaTime, proto, sWBtc, nWBmps, nSt, optionSan,
+                contemptOption, maxPoints):
     """ Analyze positions """
 
     # nSt is an integer by default
@@ -492,12 +493,12 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                                         if debug:
                                             logfnFO.write("Engine best move is correct!!\n")
                                             logfnFO.write("Position points earned             : %d\n" %(scoreList[i]))
-                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                                     else:
                                         if debug:
                                             logfnFO.write("Engine best move is in alternative moves!\n")
                                             logfnFO.write("Position points earned             : %d\n" %(scoreList[i]))
-                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                                     bmFound = True
                                     break
 
@@ -507,7 +508,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                                         wrongEpdFO.write(pos + "\n")
                                         
                                     logfnFO.write("Engine best move is not one of the solution moves??\n\n")
-                                    logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                    logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                             
                             break                        
                     else:                    
@@ -569,12 +570,12 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                                         if debug:
                                             logfnFO.write("Engine best move is correct!!\n")
                                             logfnFO.write("Position points earned             : %d\n" %(scoreList[i]))
-                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                                     else:
                                         if debug:
                                             logfnFO.write("Engine best move is in alternative moves!\n")
                                             logfnFO.write("Position points earned             : %d\n" %(scoreList[i]))
-                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                            logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                                     bmFound = True
                                     break
 
@@ -584,18 +585,18 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                                         wrongEpdFO.write(pos + "\n")
                                         
                                     logfnFO.write("Engine best move is not one of the solution moves??\n\n")
-                                    logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, 10*pos_num))
+                                    logfnFO.write("Total points for this theme so far : %d/%d\n\n" %(score, maxPoints*pos_num))
                                     
                             break  # bestmove is found
 
         # Save the data after given id is done
         if pos_num:
-            scorePercent = 100*float(score)/(10*pos_num)
+            scorePercent = 100*float(score)/(maxPoints*pos_num)
         else:
             scorePercent = 0.0
 
         if debug:
-            logfnFO.write("Total points for %s: %d/%d\n\n" %(idItem, score, 10*pos_num))
+            logfnFO.write("Total points for %s: %d/%d\n\n" %(idItem, score, maxPoints*pos_num))
 
         # Save the data
         ResultData.append([idItem, pos_num, score, scorePercent, bmCnt])
@@ -620,7 +621,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
             totalPos += item[1]
             totalBm += item[4]
             
-        maxScore = 10*totalPos
+        maxScore = maxPoints*totalPos
 
         numPositions = count_positions(inFile)
 
@@ -630,15 +631,15 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
         if proto == 0:  # UCI
             resFO.write("Hash: %d, Threads: %d, time/pos: %0.3fs\n\n" %(hashv, threadsv, float(stime)/1000))
             resFO.write("Number of positions in %s: %d\n" %(inFile, numPositions))
-            resFO.write("Max score = %d x %d = %d\n" %(numPositions, 10, numPositions*10))
+            resFO.write("Max score = %d x %d = %d\n" %(numPositions, maxPoints, numPositions*maxPoints))
         else:
             if nSt:
                 resFO.write("Number of positions in %s: %d\n" %(inFile, numPositions))
-                resFO.write("Max score = %d x %d = %d\n" %(numPositions, 10, numPositions*10))
+                resFO.write("Max score = %d x %d = %d\n" %(numPositions, maxPoints, numPositions*maxPoints))
                 resFO.write("Estimated time/pos: %0.3fs\n" %(float(nSt)))
             else:
                 resFO.write("Number of positions in %s: %d\n" %(inFile, numPositions))
-                resFO.write("Max score = %d x %d = %d\n" %(numPositions, 10, numPositions*10))
+                resFO.write("Max score = %d x %d = %d\n" %(numPositions, maxPoints, numPositions*maxPoints))
                 resFO.write("Estimated time/pos: %0.3fs\n" %(float((minutePart*60) + secondPart)/nWBmps))
         
         seconds = timeEnd - timeStart
@@ -678,7 +679,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
             slope = 44.523
             intercept = -242.85
             if totalPos:
-                sp = 100*float(totalScore)/(10*totalPos)
+                sp = 100*float(totalScore)/(maxPoints*totalPos)
                 Rating = slope*sp + intercept
                 resFO.write('STS rating: %0.0f\n' %(Rating))
                 
@@ -708,7 +709,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
                                                                                                          r[11][3], r[12][3], r[13][3], r[14][3],\
                                                                                                                100*float(totalScore)/maxScore))
         if bCalculateRating:
-            sp = 100*float(totalScore)/(10*totalPos)
+            sp = 100*float(totalScore)/(maxPoints*totalPos)
             Rating = slope*sp + intercept
             resFO.write('%8s %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f %6.0f\n' %('Rating', slope*r[0][3]+intercept, slope*r[1][3]+intercept,\
                                                                                                                                  slope*r[2][3]+intercept, slope*r[3][3]+intercept, slope*r[4][3]+intercept,\
@@ -772,11 +773,13 @@ def main(argv):
     nSt = 0
     bSan = False
     contempt = 0
+    maxpoint = 10
 
     try:
-        opts, args = getopt.getopt(argv, "f:e:h:t:", ["file=", "engine=", "hash=", "threads=",\
-                                                      "movetime=", "log", 'getrating', 'proto=',\
-                                                      'tc=', 'mps=', 'st=', 'san', 'contempt='])
+        opts, args = getopt.getopt(argv, "f:e:h:t:", ["file=", "engine=", "hash=", "threads=",
+                                                      "movetime=", "log", 'getrating', 'proto=',
+                                                      'tc=', 'mps=', 'st=', 'san', 'contempt=',
+                                                      'maxpoint='])
     except getopt.GetoptError as err:
         print(str(err))
         usage()
@@ -810,6 +813,8 @@ def main(argv):
             bSan = True
         elif opt in ("--contempt"):
             contempt = int(arg)
+        elif opt in ("--maxpoint"):
+            maxpoint = int(arg)
          
     # Validate engine, time, depth and file
     if sEngine == None:
@@ -860,9 +865,9 @@ def main(argv):
                 print('Analysis Time to get CCRL 40/4 rating estimate : %0.0fms' %(analysisTime))
                 analysisTime = int(analysisTime)
 
-        analyze_pos(sFile, sEngine, nHash, nThreads, nMoveTime, bLog,\
-                    numberOfPositions, bRate, analysisTime, protocol,\
-                    stc, nmps, nSt, bSan, contempt)
+        analyze_pos(sFile, sEngine, nHash, nThreads, nMoveTime, bLog,
+                    numberOfPositions, bRate, analysisTime, protocol,
+                    stc, nmps, nSt, bSan, contempt, maxpoint)
 
         print('\nDone!!')
         input("Press enter key to exit")   
