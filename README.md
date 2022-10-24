@@ -19,6 +19,9 @@ sts 1 to 15 positions with original points.
 * STS1-STS15_LAN_v4.epd  
 sts 1 to 15 positions with new points based from stockfish 15 analysis. This file in the epd folder. It is analyzed by Stockfish 15 at 60s per position with multipv 10. Stockfish 15 is run on a single core using cpu i7-2600K, 3.4 Ghz. The test suite has now a top 10 best moves to test the engines or even humans.
 
+* STS1-STS15_LAN_v5.epd  
+This is similar to `STS1-STS15_LAN_v4.epd` except the max point in each position is 100.
+
 ## Notes
 * The program `--getrating` flag is only applicable for the `STS1-STS15_LAN_v3.epd` test.
 
