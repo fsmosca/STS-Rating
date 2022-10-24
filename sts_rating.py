@@ -1,7 +1,9 @@
 """
 STS Rating
-
 """
+
+__version__ = '14.1'
+
 
 import sys
 import getopt
@@ -9,15 +11,14 @@ import os
 import subprocess
 import time, datetime
 import timeit
-import multiprocessing
+
 
 # Constants
 UCI = 0
 WB = 1
 MS_TIME_BUFFER = 20
 APP_NAME = 'STS Rating'
-VERSION = "14.0"
-APP_NAME_VERSION = APP_NAME + " v" + VERSION
+APP_NAME_VERSION = APP_NAME + " v" + __version__
 STS_ID = ['STS(v1.0)', 'STS(v2.2)', 'STS(v3.0)', 'STS(v4.0)', 'STS(v5.0)',\
           'STS(v6.0)', 'STS(v7.0)', 'STS(v8.0)', 'STS(v9.0)', 'STS(v10.0)',\
           'STS(v11.0)', 'STS(v12.0)', 'STS(v13.0)', 'STS(v14.0)', 'STS(v15.0)']
@@ -51,15 +52,7 @@ def delete_file(input_fn):
     
 def ShowPlatform(title):
     """ Show hardware """
-
-    try:
-        num_cores = multiprocessing.cpu_count()
-    except:
-        num_cores = 0
-    
     print(title)
-    if num_cores != 0:
-        print('Number of cores: %d' %(num_cores))
 
 
 def get_score_percent_key(item):
@@ -613,17 +606,9 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
     p.communicate()
 
     timeEnd = time.perf_counter()
-        
-    try:
-        num_cores = multiprocessing.cpu_count()
-    except:
-        num_cores = 0
 
     # Write summary of results
     with open(resultFN, 'a') as resFO:
-
-        # nsFO.write(APP_NAME_VERSION + "\n")
-
         totalScore = 0
         totalPos = 0
         r = ResultData
@@ -640,9 +625,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
         numPositions = count_positions(inFile)
 
         # Result matrix
-        resFO.write('%s v%s\n' %(APP_NAME, VERSION))
-        if num_cores != 0:
-            resFO.write('Number of cores: %d\n\n' %(num_cores))
+        resFO.write('%s v%s\n' %(APP_NAME, __version__))
         resFO.write('Engine: %s\n' %(ENG_ID_NAME))
         if proto == 0:  # UCI
             resFO.write("Hash: %d, Threads: %d, time/pos: %0.3fs\n\n" %(hashv, threadsv, float(stime)/1000))
@@ -773,7 +756,7 @@ def analyze_pos(inFile, engineName, hashv, threadsv, stime, debug, numberOfPosit
 
 def main(argv):
 
-    ShowPlatform("%s v%s\n" %(APP_NAME, VERSION))
+    ShowPlatform("%s v%s\n" %(APP_NAME, __version__))
     
     sFile = None
     sEngine = None
