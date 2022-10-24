@@ -17,7 +17,10 @@ python sts_rating.py -f "STS1-STS15_LAN_v3.epd" -e Stockfish.exe -t 1 -h 128
 sts 1 to 15 positions with original points.
 
 * STS1-STS15_LAN_v4.epd  
-sts 1 to 15 positions with new points based from stockfish 15 analysis. The top moves are now up to 10. This file in the epd folder.
+sts 1 to 15 positions with new points based from stockfish 15 analysis. This file in the epd folder. It is analyzed by Stockfish 15 at 60s per position with multipv 10. Stockfish 15 is run on a single core using cpu i7-2600K, 3.4 Ghz. The test suite has now a top 10 best moves to test the engines or even humans.
+
+## Notes
+* The program `--getrating` flag is only applicable for the `STS1-STS15_LAN_v3.epd` test.
 
 ## Credits
 * Dann Corbit and Swaminathan  
