@@ -1,6 +1,8 @@
 # Analyze
 A program to analyze the given epd with the uci engine.
 
+If you want to contribute analyzing sts positions, send me your gmail.
+
 
 ## Setup
 
