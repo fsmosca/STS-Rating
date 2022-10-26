@@ -11,13 +11,14 @@ Example:
 """
 
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 
 import argparse
 import chess.engine
 import pandas as pd
 import logging
+import time
 
 
 def analyze(enginefn, epd, depth, hashmb, threads, multipv, output):
@@ -28,6 +29,8 @@ def analyze(enginefn, epd, depth, hashmb, threads, multipv, output):
 
     limit = chess.engine.Limit(depth=depth)
     board = chess.Board(epd)
+
+    time_start = time.perf_counter()
 
     engine_info = engine.analyse(board, limit=limit, multipv=multipv)
 
@@ -46,6 +49,8 @@ def analyze(enginefn, epd, depth, hashmb, threads, multipv, output):
         data.append([epd, m.uci(), s, d, p2, engine_name])
 
     engine.quit()
+    time_end = time.perf_counter()
+    print(f'elapse (sec): {time_end - time_start:0.1f}')
 
     df = pd.DataFrame(data)
     df.columns = ['epd', 'move', 'eval', 'depth', 'pv', 'engine']
