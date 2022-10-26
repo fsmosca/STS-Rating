@@ -5,9 +5,9 @@ A program to analyze the given epd with the uci engine.
 ## Setup
 
 * Install Python version >= 3.7
-* Install pandas
+* Install pandas  
   pip install pandas
-* Install python chess
+* Install python chess  
   pip install chess
 
 ## Command line
