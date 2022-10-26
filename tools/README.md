@@ -14,7 +14,7 @@ If you want to contribute analyzing sts positions, send me your gmail so I can g
 
 ## Command line
 
-In the output `index_1_d26_ferdy_sf15.csv`, the index_1 is the position index found in the sts_positions google sheet. Added the [project](https://drive.google.com/drive/folders/1XbIND2VVbmhWbKY6bL17jdbTuSwMbmFT) folder in google where sheet can be found.
+In the output `index_1_d26_ferdy_sf15.csv`, the index_1 is the position index found in the sts_positions google sheet. That also means the epd we are analyzing has an index number 1.
 
 ```
 python analyze.py --epd "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - -" --engine "stockfish.exe" --hash-mb 256 --threads 1 --depth 26 --output "index_1_d26_ferdy_sf15.csv" --log
