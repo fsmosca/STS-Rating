@@ -99,6 +99,10 @@ for e in eval:
 ## Notes
 * The program `--getrating` flag is only applicable for the `STS1-STS15_LAN_v3.epd` test.
 
+## Current activity
+
+- [ ] [Analyze the original STS positions](https://github.com/fsmosca/STS-Rating/tree/master/tools) with Stockfish 15. Positions that are no longer useful will be replaced. Positions that are no longer suitable for the theme will be replaced or moved to other themes if applicable. All positions will be analyzed with multipv 10 and as much depth as possible.
+
 ## Credits
 * Dann Corbit and Swaminathan  
 https://sites.google.com/site/strategictestsuite/about-1
