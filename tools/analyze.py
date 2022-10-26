@@ -11,7 +11,7 @@ Example:
 """
 
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 import argparse
@@ -73,14 +73,14 @@ def main():
                         help='The multipv value the engine will be run (not required, default=10).')
     parser.add_argument('--output', required=True, type=str,
                         help='The output filename of csv file, e.g. --output index_1_d20_sf15.csv (required).')
-    parser.add_argument('--log', action='store_true',
-                        help='A flag to enable logging. Log file log.txt will be created in overwrite mode.')
+    parser.add_argument('--log-file', required=False, type=str, default=None,
+                        help='The log filename, e.g. --log-file sf15_log.txt (not required, default=None).')
     parser.add_argument('-v', '--version', action='version', version=f'{__version__}')
 
     args = parser.parse_args()
 
-    if args.log:
-        logging.basicConfig(level=logging.DEBUG, filename='log.txt', filemode='w')
+    if args.log_file is not None:
+        logging.basicConfig(level=logging.DEBUG, filename=args.log_file, filemode='w')
 
     analyze(args.engine, args.epd, args.depth, args.hash_mb, args.threads, args.multipv, args.output)
 
