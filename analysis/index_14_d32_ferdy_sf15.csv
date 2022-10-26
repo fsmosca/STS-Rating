@@ -1,0 +1,11 @@
+epd,move,eval,depth,pv,engine
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,d3d4,582,32,d3d4 c5d4 c3d4 e5e4 h2d6 e4f3 d6c7,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,f3f5,547,32,f3f5 f6e8 g1h1 d6f8 b5c6 b7a7 c4e5,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,g1h1,491,32,g1h1 c7d8 f3f5 b7c7 d3d4 c5d4 c3d4,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,c4d6,464,32,c4d6 c7d6 d3d4 c5d4 c3d4 d6b6 f1d1,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,f3f2,383,32,f3f2 b8f8 f2f5 f6e8 f5g5 b7b8 g1h1,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,c1d1,382,32,c1d1 b8f8 g1h1 b7b8 d1c1 b8d8 c1e1,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,f3d1,355,32,f3d1 b8f8 g1h1 b7a7 f1e1 c7d8 d3d4,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,c1e1,355,32,c1e1 b8f8 g1h1 b7a7 c4e3 g6e7 h2g1,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,c1c2,353,32,c1c2 b8d8 f3f5 b7a7 g1h1 f6d5 d3d4,Stockfish 15
+1r4k1/1rq2pp1/3b1nn1/pBpPp3/P1N4p/2PP1Q1P/6PB/2R2RK1 w - -,f1e1,343,32,f1e1 b8d8 e1e3 f6e8 g1h1 b7b8 f3f5,Stockfish 15
