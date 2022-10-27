@@ -11,7 +11,7 @@ Example:
 """
 
 
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 import argparse
@@ -21,11 +21,39 @@ import logging
 import time
 
 
-def analyze(enginefn, epd, depth, hashmb, threads, multipv, output):
+def set_engine_options(engine, engine_option, hashmb, threads):
+    """Sets engine options.
+    """
+    is_hash_set, is_thread_set = False, False
+    if engine_option is not None:
+        opt_list = engine_option.split(',')
+        for o in opt_list:
+            opt = o.strip()
+            name = opt.split('=')[0].strip()
+            value = opt.split('=')[1].strip()
+
+            if name not in engine.options:
+                logging.warning(f'option {name} is not supported by the engine')
+                continue
+
+            engine.configure({name: value})
+            logging.debug(f'{name} is set to {value}')
+            
+            if name.lower() == 'hash':
+                is_hash_set = True
+            if name.lower() == 'threads':
+                is_thread_set = True
+
+    if not is_hash_set:
+        engine.configure({'Hash': hashmb})
+    if not is_thread_set:
+        engine.configure({'Threads': threads})
+
+
+def analyze(enginefn, epd, depth, hashmb, threads, multipv, output, engine_option):
     engine = chess.engine.SimpleEngine.popen_uci(enginefn)
-    engine.configure({'Hash': hashmb})
-    engine.configure({'Threads': threads})
     engine_name = engine.id['name']
+    set_engine_options(engine, engine_option, hashmb, threads)
 
     limit = chess.engine.Limit(depth=depth)
     board = chess.Board(epd)
@@ -75,6 +103,8 @@ def main():
                         help='The output filename of csv file, e.g. --output index_1_d20_sf15.csv (required).')
     parser.add_argument('--log-file', required=False, type=str, default=None,
                         help='The log filename, e.g. --log-file sf15_log.txt (not required, default=None).')
+    parser.add_argument('--engine-option',
+                         help='set engine options, e.g. --engine-option "Hash=128,Skill Level=2".')
     parser.add_argument('-v', '--version', action='version', version=f'{__version__}')
 
     args = parser.parse_args()
@@ -82,7 +112,9 @@ def main():
     if args.log_file is not None:
         logging.basicConfig(level=logging.DEBUG, filename=args.log_file, filemode='w')
 
-    analyze(args.engine, args.epd, args.depth, args.hash_mb, args.threads, args.multipv, args.output)
+    analyze(args.engine, args.epd, args.depth,
+            args.hash_mb, args.threads, args.multipv,
+            args.output, args.engine_option)
 
 
 if __name__ == '__main__':
