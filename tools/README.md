@@ -24,6 +24,11 @@ python analyze.py --epd "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - -" 
 
 **Analyze positions in the epd file**  
 
+Be sure to have `epd_index.json` file located in the same folder with analyze.py. The epd's in sample.epd must be in `epd_index.json'. The purpose of this file
+is to get the index number given the epd. This index number is found in google sheet sts_positions.
+
+The output csv file will be auto-generated. Notice there is --username option. The output csv file will be auto-generated based from the index, depth and username.
+
 ```
 python analyze.py --epd-file sample.epd --username ferdy --engine "stockfish.exe" --hash-mb 256 --threads 1 --depth 26 --output tmp.csv --log-file log.txt
 ```
