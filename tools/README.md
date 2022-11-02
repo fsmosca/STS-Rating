@@ -14,7 +14,7 @@ If you want to contribute analyzing sts positions, send me your gmail so I can g
 
 ## Command line
 
-**Analyze from a single epd**  
+### Analyze from a single epd
 
 In the output `index_1_d26_ferdy_sf15.csv`, the index_1 is the position index found in the sts_positions google sheet. That also means the epd we are analyzing has an index number 1.
 
@@ -24,7 +24,7 @@ python analyze.py --epd "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - -" 
 
 See also the sample batch file `analyze_epd.bat`.
 
-**Analyze positions in the epd file**  
+### Analyze positions in the epd file
 
 Be sure to have `epd_index.json` file located in the same folder with analyze.py. The epd's in sample.epd must be in `epd_index.json'. The purpose of this file
 is to get the index number given the epd. This index number is found in google sheet sts_positions.
