@@ -19,7 +19,7 @@ set epd_file=sample.epd
 
 :: The out filename is ignored in this case. But it should be defined.
 :: The output csv filename will be auto-generated based on the epd index, username and depth.
-set out=temp.txt
+set out=temp.csv
 
 :: Important, use --username your_username, because the output csv file will be auto-generated
 :: and username value will be part of the filename.
