@@ -10,20 +10,12 @@
 :: If --log-file is defined, it will be in append mode.
 
 set engine="F:/Chess/Engines/stockfish/stockfish_15/stockfish_15_modern.exe"
-set hash=256
-set threads=1
-set depth=36
+set hash=512
+set threads=4
+set depth=40
 
 set username=ferdy
 set epd_file=sample.epd
-
-:: The out filename is ignored in this case. But it should be defined.
-:: The output csv filename will be auto-generated based on the epd index, username and depth.
-set out=temp.csv
-
-:: Important, use --username your_username, because the output csv file will be auto-generated
-:: and username value will be part of the filename.
-:: Example csv output, index_167_d36_ferdy.csv
 
 python analyze.py --epd-file %epd_file% ^
 --username %username% ^
@@ -31,5 +23,4 @@ python analyze.py --epd-file %epd_file% ^
 --hash-mb %hash% ^
 --threads %threads% ^
 --depth %depth% ^
---output %out% ^
 --log-file log.txt
