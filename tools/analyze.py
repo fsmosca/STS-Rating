@@ -11,16 +11,25 @@ Example:
 """
 
 
-__version__ = '0.5'
+__version__ = '0.6'
 
 
 import argparse
 import logging
 import time
 import json
+import secrets
+import string
 
 import chess.engine
 import pandas as pd
+
+
+alphabet = string.ascii_lowercase + string.digits
+
+
+def get_random_index():
+    return ''.join(secrets.choice(alphabet) for _ in range(8))
 
 
 def set_engine_options(engine, engine_option, hashmb, threads):
@@ -73,7 +82,7 @@ def get_epd(epd_file):
 
 
 def analyze(enginefn, epd, epd_file, depth, hashmb, threads,
-            multipv, output, engine_option, username):
+            multipv, engine_option, username):
     engine = chess.engine.SimpleEngine.popen_uci(enginefn)
     engine_name = engine.id['name']
     set_engine_options(engine, engine_option, hashmb, threads)
@@ -82,7 +91,22 @@ def analyze(enginefn, epd, epd_file, depth, hashmb, threads,
 
     limit = chess.engine.Limit(depth=depth)
 
+    epds = []
     if epd is not None:
+        epds.append(epd)
+    else:
+        epds = get_epd(epd_file)
+
+    for epd in epds:
+        try:
+            index_num = epi[epd]
+        except KeyError:
+            logging.warning(f'Position {epd} is not in epd_index.json. Temp index will be used.')
+            index_num = get_random_index()
+
+        logging.info(f'epd: {epd}, index: {index_num}')
+        print(f'epd: {epd}, index: {index_num}')
+
         board = chess.Board(epd)
 
         time_start = time.perf_counter()
@@ -103,51 +127,17 @@ def analyze(enginefn, epd, epd_file, depth, hashmb, threads,
 
             data.append([epd, m.uci(), s, d, p2, engine_name])
 
-        engine.quit()
         time_end = time.perf_counter()
-        print(f'epd: {epd}, elapse (sec): {time_end - time_start:0.1f}')
+        print(f'elapse (sec): {time_end - time_start:0.1f}')
 
         df = pd.DataFrame(data)
         df.columns = ['epd', 'move', 'eval', 'depth', 'pv', 'engine']
+
+        # Build an output filename.
+        output = f'index_{index_num}_d{depth}_{username}.csv'
         df.to_csv(output, index=False)
 
-    # Else process epd from epd file.
-    else:
-        epds = get_epd(epd_file)
-
-        for epd in epds:
-            board = chess.Board(epd)
-
-            time_start = time.perf_counter()
-
-            engine_info = engine.analyse(board, limit=limit, multipv=multipv)
-
-            data = []
-
-            # Read engine info.
-            for i in range(min(multipv, board.legal_moves.count())):
-                m = engine_info[i]['pv'][0]
-                s = engine_info[i]['score'].relative.score(mate_score=32000)
-                d = engine_info[i]['depth']
-
-                p = engine_info[i]['pv'][0:7]
-                p1 = [a.uci() for a in p]
-                p2 = ' '.join(p1)
-
-                data.append([epd, m.uci(), s, d, p2, engine_name])
-
-            time_end = time.perf_counter()
-            print(f'epd: {epd}, elapse (sec): {time_end - time_start:0.1f}')
-
-            df = pd.DataFrame(data)
-            df.columns = ['epd', 'move', 'eval', 'depth', 'pv', 'engine']
-
-            # Build an output filename.
-            index_num = epi[epd]
-            output = f'index_{index_num}_d{depth}_{username}.csv'
-            df.to_csv(output, index=False)
-
-        engine.quit()
+    engine.quit()
 
 
 def main():
@@ -159,11 +149,10 @@ def main():
                         help='The position in epd format that will be analyzed, '
                         'e.g --epd "1kr5/3n4/q3p2p/p2n2p1/PppB1P2/5BP1/1P2Q2P/3R2K1 w - -"')
     group.add_argument('--epd-file', type=str,
-                        help='The file that contents epd to be analyzed. Do not forget '
-                        ' to add --username myusername. e.g. --epd-file test.epd --username ferdy')
+                        help='The file that contains epd to be analyzed, e.g. --epd-file sample.epd')
 
-    parser.add_argument('--username', type=str,
-                        help='username to be used in the output filename when --epd-file option is used.')
+    parser.add_argument('--username', required=True, type=str,
+                        help='username to be used in the output filename, (required).')
     parser.add_argument('--engine', required=True, type=str,
                         help='The engine file (required).')
     parser.add_argument('--hash-mb', required=False, type=int, default=128,
@@ -174,10 +163,6 @@ def main():
                         help='The analysis depth (not required, default=20).')
     parser.add_argument('--multipv', required=False, type=int, default=10,
                         help='The multipv value the engine will be run (not required, default=10).')
-    parser.add_argument('--output', required=True, type=str,
-                        help='The output filename of csv file, e.g. --output index_1_d20_ferdy.csv (required). '
-                        'This output file will be ignored if --epd-file option is used, because the output filename will '
-                        'be auto-generated.')
     parser.add_argument('--log-file', required=False, type=str,
                         help='The log filename, (not required) e.g. --log-file sf15_log.txt. '
                         'Write mode is append if --epd-file is defined otherwise overwrite.')
@@ -191,16 +176,9 @@ def main():
         fmode = 'a' if args.epd_file is not None else 'w'
         logging.basicConfig(level=logging.DEBUG, filename=args.log_file, filemode=fmode)
 
-    username =args.username
-    epd_file = args.epd_file
-
-    # If --epd-file option is used, there must be --username defined too.
-    if username is None and epd_file is not None:
-        raise Exception(f'Define --username <username> because there is --epd-file defined.')
-
-    analyze(args.engine, args.epd, epd_file, args.depth,
+    analyze(args.engine, args.epd, args.epd_file, args.depth,
             args.hash_mb, args.threads, args.multipv,
-            args.output, args.engine_option, args.username)
+            args.engine_option, args.username)
 
 
 if __name__ == '__main__':
