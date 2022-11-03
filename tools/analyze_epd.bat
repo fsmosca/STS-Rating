@@ -2,24 +2,19 @@
 
 
 set engine="F:/Chess/Engines/stockfish/stockfish_15/stockfish_15_modern.exe"
-set hash=256
-set threads=1
-set depth=36
+set hash=512
+set threads=4
+set depth=44
 
 set username=ferdy
 set ename=sf15
 
-:: The i or index number from google sheet sts_positions, depends on the epd value
-:: If you change the epd, also change the index.
-set i=170
-set epd="8/3q1pk1/3p4/2pB2p1/P2n4/1P4BP/6P1/4R1K1 b - -"
-
-set out=index_%i%_d%depth%_%username%_%ename%.csv
+set epd="6r1/4bbk1/p3p1p1/Pp1pPp2/3P1P2/2P2B2/3B2K1/1R6 b - -"
 
 python analyze.py --epd %epd% ^
+--username %username% ^
 --engine %engine% ^
 --hash-mb %hash% ^
 --threads %threads% ^
 --depth %depth% ^
---output %out% ^
---log-file "log_index_%i%_d%depth%_%username%.txt"
+--log-file "log_%depth%_%username%_%ename%.txt"
