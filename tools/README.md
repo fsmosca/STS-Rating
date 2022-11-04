@@ -39,6 +39,19 @@ python analyze.py --epd-file sample.epd --username ferdy --engine "stockfish.exe
 
 See also the sample batch file `analyze_epd_file.bat`.
 
+### Use depth and move time to control the search
+
+This feature is only available from version 0.7.
+
+`python analyze.py --version`
+
+```
+--depth 40 --move-time-sec 600
+```
+
+* If the depth is reached but there is still time, the search will continue. The output may have more than 40 analysis depth. If the position has a fast search depth/time ratio, this feature will give us confidence that the analysis is fine because the search is terminated by time.
+* If depth is not yet reached and there is no more time left, the search will be terminated. This will save resources especially those positions that have a slow search depth/time ratio. Although the target depth is not satisfied, we can be confident that the analysis result is still reliable because the position is evaluated for 600 sec or 10 minutes.
+
 ## Help
 Send the command help to see the program options, etc.
 
