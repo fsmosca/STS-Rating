@@ -8,7 +8,7 @@ Requirements:
 """
 
 
-__version__ = '0.7'
+__version__ = '0.7.1'
 
 
 import argparse
@@ -172,6 +172,9 @@ def analyze(enginefn: str, epd: str, epd_file: str, depth: int,
 
         df = pd.DataFrame(data)
         df.columns = ['epd', 'move', 'eval', 'depth', 'pv', 'engine']
+
+        # Sort by score and depth
+        df = df.sort_values(by=['eval', 'depth'], ascending=[False, False])
 
         # Build an output filename.
         output = f'index_{index_num}_d{adepth}_{username}.csv'
