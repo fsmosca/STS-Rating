@@ -8,7 +8,7 @@ Requirements:
 """
 
 
-__version__ = '0.7.1'
+__version__ = '0.8.0'
 
 
 import argparse
@@ -94,9 +94,12 @@ def get_analysis_data(engine_info, num_moves, epd, engine_name) -> list:
         pv1 = [a.uci() for a in pv]
         pv2 = ' '.join(pv1)
 
+        if i == 0:
+            rdepth = depth
+
         data.append([epd, move.uci(), eval_, depth, pv2, engine_name])
 
-    return data
+    return data, rdepth
 
 
 def analyze(enginefn: str, epd: str, epd_file: str, depth: int,
@@ -116,7 +119,10 @@ def analyze(enginefn: str, epd: str, epd_file: str, depth: int,
 
     epi = read_epd_index()
 
-    limit = chess.engine.Limit(depth=depth)
+    if move_time_sec:
+        limit = chess.engine.Limit(time=move_time_sec)
+    else:
+        limit = chess.engine.Limit(depth=depth)
 
     epds = []
     if epd is not None:
@@ -140,32 +146,8 @@ def analyze(enginefn: str, epd: str, epd_file: str, depth: int,
 
         time_start = time.perf_counter()
 
-        if move_time_sec is None:
-            engine_info = engine.analyse(board, limit=limit, multipv=multipv)
-            data = get_analysis_data(engine_info, num_moves, pos, engine_name)
-            adepth = depth
-        else:
-            with engine.analysis(board, multipv=multipv) as analysis:
-                for engine_info in analysis:
-
-                    # If depth is already reached, we abort if there is no time.
-                    if engine_info.get("depth", 0) >= depth:
-
-                        # If there is still time, continue the search.
-                        time_left = move_time_sec - (time.perf_counter() - time_start)
-                        if time_left < 0:
-                            analysis.stop()
-
-                    # Else if depth is not yet reached, but time is, then abort the search.
-                    else:
-                        time_left = move_time_sec - (time.perf_counter() - time_start)
-                        if time_left < 0:
-                            analysis.stop()
-
-                data = get_analysis_data(analysis.multipv, num_moves, pos, engine_name)
-
-                # Get the depth of top 1 move for csv output filename.
-                adepth = analysis.multipv[0]['depth']
+        engine_info = engine.analyse(board, limit=limit, multipv=multipv)
+        data, adepth = get_analysis_data(engine_info, num_moves, pos, engine_name)
 
         time_end = time.perf_counter()
         print(f'elapse (sec): {time_end - time_start:0.1f}')
@@ -229,7 +211,7 @@ def main():
             level=logging.DEBUG,
             filename=args.log_file,
             filemode=fmode,
-            format='%(levelname)s : %(filename)s: %(message)s')
+            format='%(asctime)s : %(levelname)s : %(filename)s: %(message)s')
 
     move_time_sec = args.move_time_sec
     if move_time_sec is not None:
